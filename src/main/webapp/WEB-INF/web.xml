@@ -6,6 +6,5 @@
   <display-name>Archetype Created Web Application</display-name>
   <listener>
     <listener-class>com.m.mvc.context.CentextLoadListener</listener-class>
-    
   </listener>
 </web-app>
