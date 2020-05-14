@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans>
+    <bean name="baseDao" class="com.m.dao.impl.BaseDaoImpl"></bean>
+    <bean name="baseService" class="com.m.services.impl.BaseServiceImpl">
+        <opt name="dao" ref="baseDao"></opt>
+    </bean>
+    <bean name="baseController" class="com.m.controller.BaseController">
+        <opt name="service" ref="baseService"></opt>
+    </bean>
+</beans>
