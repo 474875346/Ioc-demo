@@ -7,4 +7,12 @@
   <listener>
     <listener-class>com.m.mvc.context.CentextLoadListener</listener-class>
   </listener>
+  <servlet>
+    <servlet-name>mvc</servlet-name>
+    <servlet-class>com.m.mvc.web.DispacherServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>mvc</servlet-name>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
 </web-app>

@@ -9,6 +9,7 @@ public class BaseServiceImpl implements BaseService {
 
     @Override
     public void test() {
+        System.out.println("service被调用");
         dao.test();
     }
 
