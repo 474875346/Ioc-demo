@@ -9,11 +9,21 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 public class DispacherServlet implements Servlet {
-    @Override
-    public void init(ServletConfig servletConfig) throws ServletException {
 
+
+    private List<HanderMapping> handerMappingList;
+
+    private void initHanderMapping() {
+        // 1.在请求到达以后，所有的HanderMapping已经映射完毕
+        this.handerMappingList = BeanFacotry.getBeans();
+    }
+
+    @Override
+    public void init(ServletConfig conf) throws ServletException {
+        initHanderMapping();
     }
 
     @Override
@@ -23,29 +33,37 @@ public class DispacherServlet implements Servlet {
 
     @Override
     public void service(ServletRequest req, ServletResponse resp) throws ServletException, IOException {
-        HttpServletRequest request = (HttpServletRequest)req;
-        HttpServletResponse response = (HttpServletResponse)resp;
-        HttpSession session = request.getSession();
-        ServletContext application = session.getServletContext();
+        HttpServletRequest request = (HttpServletRequest) req;
+        HttpServletResponse response = (HttpServletResponse) resp;
+//        HttpSession session = request.getSession();
+//        ServletContext application = session.getServletContext();
 
-        String uri = request.getRequestURI();
-        String[] uris = uri.split("/");
-        String controllerName = uris[2];
-        String methodName = uris[3].replace(".do","");
+//        String uri = request.getRequestURI();
+//        String[] uris = uri.split("/");
+//        String controllerName = uris[2];
+//        String methodName = uris[3].replace(".do", "");
+//        XMLApplicatContext xmlac = new XMLApplicatContext();
+//        Object obj = xmlac.getBean(controllerName);
+//        try {
+//            Method method = obj.getClass().getMethod(methodName);
+//            method.invoke(obj);
+//        } catch (NoSuchMethodException e) {
+//            e.printStackTrace();
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        } catch (InvocationTargetException e) {
+//            e.printStackTrace();
+//        }
 
-        XMLApplicatContext xmlac = new XMLApplicatContext();
-        Object obj = xmlac.getBean(controllerName);
-        try {
-            Method method = obj.getClass().getMethod(methodName);
-            method.invoke(obj);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        for (HanderMapping hm : handerMappingList) {
+            HanderChain hc = hm.getHander(request,response);
+            if (hc != null) {
+                ModelAndView mv = hc.chain();
+
+                // 完成相应阶段
+                break;
+            }
         }
-
     }
 
     @Override
